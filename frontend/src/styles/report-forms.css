@@ -1,0 +1,62 @@
+/* V1 报告类表单：统一加大可编辑区域，避免内容区过小 */
+.report-form-top-label .el-form-item__content {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  margin-left: 0 !important;
+}
+
+.report-form-textarea .el-textarea,
+.report-form-textarea .el-input {
+  width: 100%;
+  max-width: 100%;
+  display: block;
+}
+
+.report-form-textarea .el-textarea__inner {
+  font-size: 14px;
+  line-height: 1.55;
+  padding: 10px 12px;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.report-form-textarea .el-textarea__inner:not(:focus) {
+  min-height: var(--report-textarea-min-height, 140px);
+}
+
+.report-form-textarea--medium .el-textarea__inner:not(:focus) {
+  min-height: var(--report-textarea-min-height-md, 112px);
+}
+
+.report-form-textarea--large .el-textarea__inner:not(:focus) {
+  min-height: var(--report-textarea-min-height-lg, 200px);
+}
+
+/* period_v2 三章：预览与编辑区最小高度一致 */
+.period-v2-section-field--uniform .period-v2-rendered {
+  min-height: var(--report-textarea-min-height-lg, 200px);
+}
+
+.period-v2-section-field--uniform .report-form-textarea--large .el-textarea__inner,
+.period-v2-section-field--uniform .period-v2-textarea .el-textarea__inner {
+  min-height: var(--report-textarea-min-height-lg, 200px);
+}
+
+.editor-panel {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.report-form-top-label .el-form-item__label {
+  margin-bottom: 4px;
+  line-height: 1.4;
+  height: auto !important;
+}
+
+.report-form-top-label .el-form-item {
+  margin-bottom: 22px;
+}

@@ -1,0 +1,15 @@
+CREATE TABLE IF NOT EXISTS departments (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL UNIQUE,
+  status TEXT NOT NULL DEFAULT 'ACTIVE',
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS user_departments (
+  user_id INTEGER NOT NULL,
+  department_id INTEGER NOT NULL,
+  PRIMARY KEY (user_id, department_id),
+  FOREIGN KEY (user_id) REFERENCES users(id),
+  FOREIGN KEY (department_id) REFERENCES departments(id)
+);

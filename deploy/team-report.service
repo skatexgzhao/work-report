@@ -1,0 +1,22 @@
+[Unit]
+Description=Team Report (部门周期报告)
+Documentation=file:/opt/team-report/README.txt
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=team-report
+Group=team-report
+EnvironmentFile=-/etc/team-report/config.env
+WorkingDirectory=/opt/team-report/app/backend
+ExecStart=/usr/bin/node server.js
+Restart=on-failure
+RestartSec=5
+NoNewPrivileges=true
+
+# 数据目录需可写
+ReadWritePaths=/var/lib/team-report
+
+[Install]
+WantedBy=multi-user.target

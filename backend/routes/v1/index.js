@@ -1,0 +1,28 @@
+const express = require('express')
+const healthRoutes = require('./health')
+const authRoutes = require('./auth')
+const meRoutes = require('./me')
+const departmentsRoutes = require('./departments')
+const usersRoutes = require('./users')
+const dailyReportsRoutes = require('./daily-reports')
+const periodReportsRoutes = require('./period-reports')
+const aiRoutes = require('./ai')
+const templatesRoutes = require('./templates')
+const aiConfigRoutes = require('./ai-config')
+const teamsRoutes = require('./teams')
+
+const router = express.Router()
+
+router.use(healthRoutes)
+router.use(authRoutes)
+router.use(meRoutes)
+router.use(departmentsRoutes)
+router.use(usersRoutes)
+router.use(dailyReportsRoutes)
+router.use(periodReportsRoutes)
+router.use(aiRoutes)
+router.use(templatesRoutes)
+router.use(aiConfigRoutes)
+router.use(teamsRoutes)
+
+module.exports = router

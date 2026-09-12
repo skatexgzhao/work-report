@@ -1,0 +1,28 @@
+
+{
+  "name": "work-report",
+  "version": "1.0.0",
+  "description": "Daily work logs and AI-assisted weekly/monthly/quarterly reports",
+  "main": "backend/server.js",
+  "scripts": {
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:backend": "cd backend && npm run dev",
+    "dev:frontend": "cd frontend && npm run dev",
+    "build": "cd frontend && npm run build",
+    "start": "cd backend && npm start"
+  },
+  "keywords": ["team", "planning", "reporting", "ai", "deepseek"],
+  "author": "skatexg (https://github.com/skatexgzhao)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/skatexgzhao/work-report.git"
+  },
+  "bugs": {
+    "url": "https://github.com/skatexgzhao/work-report/issues"
+  },
+  "homepage": "https://github.com/skatexgzhao/work-report#readme",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
