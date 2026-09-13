@@ -7,6 +7,11 @@
 **作者：** [skatexg](https://github.com/skatexgzhao)  
 **仓库：** [github.com/skatexgzhao/work-report](https://github.com/skatexgzhao/work-report)
 
+## 使用地图
+<img width="838" height="873" alt="企业微信截图_17892583412240" src="https://github.com/user-attachments/assets/7477d5aa-3a42-41e0-99a8-95ab8e72283f" />
+
+
+
 ## 功能概览
 
 | 角色 | 能力 |
