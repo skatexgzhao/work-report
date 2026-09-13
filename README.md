@@ -15,6 +15,14 @@
 <img width="838" height="873" alt="企业微信截图_17892583412240" src="https://github.com/user-attachments/assets/7477d5aa-3a42-41e0-99a8-95ab8e72283f" />
 
 
+## 功能简介
+**个人：创建日报**
+<img width="1876" height="879" alt="企业微信截图_17892651555696" src="https://github.com/user-attachments/assets/2cf01c12-06bd-4f13-81b5-55a766e224b7" />
+
+**部门：智能创建周报**
+<img width="1878" height="748" alt="企业微信截图_17892654368649" src="https://github.com/user-attachments/assets/2508c974-796c-4466-a8f6-e20fcc233698" />
+<img width="1860" height="861" alt="企业微信截图_17892656772099" src="https://github.com/user-attachments/assets/9cf56670-34e9-4bc0-87db-621a037916a6" />
+
 
 ## 功能概览
 
