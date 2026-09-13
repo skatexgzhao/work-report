@@ -118,4 +118,6 @@ npm test
 | AI 生成返回 503 | 管理员配置 AI Key，或设置环境变量 `AI_API_KEY` |
 | 部门素材为空 | 确认员工已 **提交** 对应周期的个人报告 |
 | 登录后 401 | 检查 `JWT_SECRET` 是否配置 |
-| 数据库重置 | 删除 `backend/teamplan.db` 后重启服务 |
+| 数据库重置 | 删除 `backend/teamplan.db`（及 `teamplan.db-wal` / `teamplan.db-shm`）后重启服务 |
+| 数据文件位置 | 默认 `backend/teamplan.db`；可通过 `backend/.env` 的 `DB_PATH` 修改 |
+| 重启是否丢数据 | **不会**。正常重启只重新连接同一 SQLite 文件；仅删除库文件或改 `DB_PATH` 才会像「空库」 |

@@ -107,6 +107,12 @@ Ensure-BackendEnv
 Ensure-NpmInstall $BackendDir "backend" "nodemon"
 Ensure-NpmInstall $FrontendDir "frontend" "vite"
 
+Write-Step "Building frontend dist (backend :$BackendPort serves this bundle) ..."
+Push-Location $FrontendDir
+npm run build
+if ($LASTEXITCODE -ne 0) { Pop-Location; throw "frontend npm run build failed" }
+Pop-Location
+
 Write-Step "Starting backend on port $BackendPort ..."
 Start-BackgroundNpm "backend" $BackendDir
 Start-Sleep -Seconds 2
@@ -120,7 +126,9 @@ Wait-Url "http://localhost:$FrontendPort/login" "Frontend"
 
 Write-Host ""
 Write-Host "Services running in background (no extra windows)." -ForegroundColor Green
-Write-Host "  Login:  http://localhost:$FrontendPort/login" -ForegroundColor White
+Write-Host "  Login (dev, latest UI): http://localhost:$FrontendPort/login" -ForegroundColor White
+Write-Host "  App home:               http://localhost:$FrontendPort/app" -ForegroundColor White
+Write-Host "  Backend + static dist:    http://localhost:$BackendPort/app" -ForegroundColor White
 Write-Host "  Health: http://localhost:$BackendPort/api/v1/health" -ForegroundColor White
 Write-Host "  Logs:   .dev\backend.out.log / .dev\frontend.out.log" -ForegroundColor DarkGray
 Write-Host ""

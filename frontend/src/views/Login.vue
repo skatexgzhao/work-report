@@ -2,8 +2,7 @@
 <template>
   <div class="login-container">
     <div class="login-box">
-      <h1>TeamPlan360</h1>
-      <p class="subtitle">团队工作计划与报告系统</p>
+      <h1>智能周报系统</h1>
 
       <el-tabs v-model="activeTab" stretch>
         <el-tab-pane label="登录" name="login">
@@ -30,7 +29,10 @@
         </el-tab-pane>
 
         <el-tab-pane label="注册" name="register">
-          <p class="register-hint">内网自助注册，注册后默认为员工；加入小组请联系部门管理者。</p>
+          <p class="register-hint">
+            注册后默认为员工。请先选部门，再选所属小组（负责人需先在「小组管理」创建小组）。
+            若部门下暂无小组，可直接注册，之后由负责人将你加入小组。
+          </p>
           <el-form :model="registerForm" :rules="registerRules" ref="registerFormRef" label-width="80px">
             <el-form-item label="用户名" prop="username">
               <el-input v-model="registerForm.username" placeholder="2–32 个字符" />
@@ -50,12 +52,34 @@
                 placeholder="请选择部门"
                 style="width: 100%"
                 :loading="departmentsLoading"
+                @change="onDepartmentChange"
               >
                 <el-option
                   v-for="d in departments"
                   :key="d.id"
                   :label="d.name"
                   :value="d.id"
+                />
+              </el-select>
+            </el-form-item>
+
+            <el-form-item
+              v-if="registerForm.departmentId"
+              label="小组"
+              prop="teamId"
+            >
+              <el-select
+                v-model="registerForm.teamId"
+                :placeholder="teamsLoading ? '加载中…' : teams.length ? '请选择所属小组' : '该部门暂无小组（可留空）'"
+                style="width: 100%"
+                :loading="teamsLoading"
+                clearable
+              >
+                <el-option
+                  v-for="t in teams"
+                  :key="t.id"
+                  :label="t.name"
+                  :value="t.id"
                 />
               </el-select>
             </el-form-item>
@@ -81,7 +105,7 @@
 
 <script>
 import { onMounted, ref, watch } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
 import { ElMessage } from 'element-plus'
 import axios from 'axios'
@@ -92,18 +116,22 @@ export default {
   name: 'Login',
   setup() {
     const router = useRouter()
+    const route = useRoute()
     const authStore = useAuthStore()
 
-    const activeTab = ref('login')
+    const activeTab = ref(route.query.tab === 'register' ? 'register' : 'login')
     const loginForm = ref({ username: '', password: '' })
     const registerForm = ref({
       username: '',
       password: '',
       confirmPassword: '',
-      departmentId: null
+      departmentId: null,
+      teamId: null
     })
     const departments = ref([])
     const departmentsLoading = ref(false)
+    const teams = ref([])
+    const teamsLoading = ref(false)
 
     const loading = ref(false)
     const registerLoading = ref(false)
@@ -135,7 +163,19 @@ export default {
           trigger: 'blur'
         }
       ],
-      departmentId: [{ required: true, message: '请选择部门', trigger: 'change' }]
+      departmentId: [{ required: true, message: '请选择部门', trigger: 'change' }],
+      teamId: [
+        {
+          validator: (_rule, value, callback) => {
+            if (teams.value.length > 0 && (value == null || value === '')) {
+              callback(new Error('请选择所属小组'))
+            } else {
+              callback()
+            }
+          },
+          trigger: 'change'
+        }
+      ]
     }
 
     async function loadDepartments() {
@@ -148,6 +188,27 @@ export default {
       } finally {
         departmentsLoading.value = false
       }
+    }
+
+    async function loadTeamsForDepartment(departmentId) {
+      registerForm.value.teamId = null
+      teams.value = []
+      if (!departmentId) return
+      teamsLoading.value = true
+      try {
+        const { data } = await axios.get(`${v1Base}/teams/public`, {
+          params: { departmentId }
+        })
+        teams.value = data
+      } catch {
+        ElMessage.error('无法加载小组列表')
+      } finally {
+        teamsLoading.value = false
+      }
+    }
+
+    function onDepartmentChange(departmentId) {
+      loadTeamsForDepartment(departmentId)
     }
 
     watch(activeTab, (tab) => {
@@ -191,7 +252,8 @@ export default {
           await authStore.register({
             username: registerForm.value.username.trim(),
             password: registerForm.value.password,
-            departmentId: registerForm.value.departmentId
+            departmentId: registerForm.value.departmentId,
+            teamId: registerForm.value.teamId
           })
           ElMessage.success('注册成功，请登录')
           loginForm.value.username = registerForm.value.username.trim()
@@ -210,6 +272,9 @@ export default {
       registerForm,
       departments,
       departmentsLoading,
+      teams,
+      teamsLoading,
+      onDepartmentChange,
       loginRules,
       registerRules,
       loading,

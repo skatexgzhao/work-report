@@ -19,6 +19,28 @@ router.get('/departments/public', async (req, res, next) => {
   }
 })
 
+/** 自助注册用：按部门列出可加入的小组（无需登录） */
+router.get('/teams/public', async (req, res, next) => {
+  try {
+    const departmentId = Number(req.query.departmentId)
+    if (!Number.isInteger(departmentId) || departmentId <= 0) {
+      return v1Error(res, 'VALIDATION_ERROR', '请提供有效的 departmentId', 400)
+    }
+    const dept = await get(req.db, 'SELECT id FROM departments WHERE id = ? AND status = ?', [
+      departmentId,
+      'ACTIVE'
+    ])
+    if (!dept) {
+      return v1Error(res, 'VALIDATION_ERROR', '部门无效或已停用', 400)
+    }
+    const teamRepo = require('../../repositories/teamRepo')
+    const rows = await teamRepo.listPublicByDepartment(req.db, departmentId)
+    res.json(rows)
+  } catch (err) {
+    next(err)
+  }
+})
+
 router.get('/departments', authenticateToken, requireAdmin, async (req, res, next) => {
   try {
     const rows = await all(req.db, 'SELECT id, name, status, created_at, updated_at FROM departments ORDER BY name')

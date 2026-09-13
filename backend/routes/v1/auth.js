@@ -2,6 +2,7 @@ const express = require('express')
 const bcrypt = require('bcryptjs')
 const { v1Error } = require('../../middleware/v1Respond')
 const { get, run } = require('../../lib/dbUtil')
+const teamRepo = require('../../repositories/teamRepo')
 
 const router = express.Router()
 
@@ -29,7 +30,7 @@ router.post('/auth/register', async (req, res, next) => {
       return v1Error(res, 'REGISTRATION_DISABLED', '当前未开放自助注册', 403)
     }
 
-    const { username, password, departmentId } = req.body
+    const { username, password, departmentId, teamId } = req.body
     const trimmedUsername = String(username || '').trim()
     if (!trimmedUsername || !password) {
       return v1Error(res, 'VALIDATION_ERROR', '用户名和密码不能为空', 400)
@@ -63,6 +64,28 @@ router.post('/auth/register', async (req, res, next) => {
       return v1Error(res, 'VALIDATION_ERROR', '所选部门无效或已停用', 400)
     }
 
+    let joinedTeamId = null
+    if (teamId != null && teamId !== '') {
+      const tid = Number(teamId)
+      if (!Number.isInteger(tid) || tid <= 0) {
+        await run(req.db, 'DELETE FROM users WHERE id = ?', [result.lastID])
+        return v1Error(res, 'VALIDATION_ERROR', '小组无效', 400)
+      }
+      const team = await teamRepo.findById(req.db, tid)
+      if (!team || team.status !== 'ACTIVE' || team.department_id !== deptId) {
+        await run(req.db, 'DELETE FROM users WHERE id = ?', [result.lastID])
+        return v1Error(res, 'VALIDATION_ERROR', '小组与所选部门不匹配或已停用', 400)
+      }
+      await teamRepo.addMember(req.db, tid, result.lastID)
+      joinedTeamId = tid
+    } else {
+      const publicTeams = await teamRepo.listPublicByDepartment(req.db, deptId)
+      if (publicTeams.length > 0) {
+        await run(req.db, 'DELETE FROM users WHERE id = ?', [result.lastID])
+        return v1Error(res, 'VALIDATION_ERROR', '该部门已开通小组，注册时请选择所属小组', 400)
+      }
+    }
+
     const created = await get(
       req.db,
       `SELECT u.id, u.username, u.role, u.department, ud.department_id
@@ -79,7 +102,8 @@ router.post('/auth/register', async (req, res, next) => {
         username: created.username,
         role: created.role,
         department: created.department,
-        departmentId: created.department_id
+        departmentId: created.department_id,
+        teamId: joinedTeamId
       }
     })
   } catch (err) {

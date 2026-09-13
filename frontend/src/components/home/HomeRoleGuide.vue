@@ -9,14 +9,19 @@
             <li>草稿随时保存，提交前有记录；需要时可请 AI 帮忙起稿。</li>
           </ul>
 
-          <h4 class="panel-title">怎么走</h4>
-          <el-steps :active="3" align-center finish-status="success" class="flow-steps">
+          <h4 class="panel-title">登录与使用流程</h4>
+          <el-steps :active="4" align-center finish-status="success" class="flow-steps flow-steps-four">
+            <el-step title="注册账号" description="选部门与所属小组" />
+            <el-step title="登录系统" description="注册成功后登录" />
             <el-step title="写日报" description="菜单：我的日报" />
-            <el-step title="做周/月/季" description="菜单：我的周/月/季报" />
-            <el-step title="提交" description="保存或 AI 后提交" />
+            <el-step title="周/月/季并提交" description="我的周/月/季报，保存或 AI 后提交" />
           </el-steps>
 
-          <p class="tip">编辑周期报告时，左侧可查看素材与缺失日期；提交前系统会先保存当前内容。</p>
+          <p class="tip">
+            注册时先选部门，再选小组（负责人需事先在「小组管理」创建小组）。
+            若部门尚无小组，可先注册，之后由负责人将你加入小组。
+            编辑周期报告时，左侧可查看素材与缺失日期；提交前系统会先保存当前内容。
+          </p>
 
           <div class="actions">
             <el-button type="primary" @click="go('/app/daily')">去写日报</el-button>
@@ -33,17 +38,23 @@
             <li>基于下级已提交报告编写汇总，过程可追溯、有依据。</li>
           </ul>
 
-          <h4 class="panel-title">怎么走</h4>
-          <el-steps :active="3" align-center finish-status="success" class="flow-steps">
-            <el-step title="打开列表" description="小组或部门报告" />
-            <el-step title="新建本周期" description="选时间范围与素材来源" />
-            <el-step title="编辑并提交" description="可查看素材与状态" />
+          <h4 class="panel-title">登录与使用流程</h4>
+          <el-steps :active="4" align-center finish-status="success" class="flow-steps flow-steps-four">
+            <el-step title="登录" description="使用管理员分配或已有账号" />
+            <el-step title="创建小组" description="小组管理：新建供成员注册选择" />
+            <el-step title="写个人报告" description="自己的日报与周/月/季报" />
+            <el-step title="汇总并提交" description="新建小组/部门报告后编辑提交" />
           </el-steps>
 
-          <p class="tip">组员个人报告交齐后，汇总更省力；您也可以像普通使用者一样写自己的日报与个人周期报告。</p>
+          <p class="tip">
+            请先在「小组管理」创建小组，成员注册时会自选小组，一般无需再逐个添加。
+            若有人注册时部门尚无小组，可在小组管理里将其补加入组。
+            组员个人周期报告提交后，汇总时可引用其素材；您自己的日报与个人周期报告流程与普通使用者相同。
+          </p>
 
           <div class="actions">
-            <el-button type="primary" @click="go('/app/team')">小组报告</el-button>
+            <el-button type="primary" @click="go('/app/admin/teams')">小组管理</el-button>
+            <el-button type="primary" plain @click="go('/app/team')">小组报告</el-button>
             <el-button type="primary" plain @click="go('/app/department')">部门报告</el-button>
             <el-button @click="go('/app/period')">我的周/月/季报</el-button>
           </div>
@@ -78,6 +89,7 @@ watch(
 function go(path) {
   router.push(path)
 }
+
 </script>
 
 <style scoped>
@@ -115,9 +127,17 @@ function go(path) {
   gap: 8px;
 }
 
+.flow-steps-four :deep(.el-step__title) {
+  font-size: 13px;
+}
+
 @media (max-width: 640px) {
   .flow-steps :deep(.el-step__description) {
     font-size: 11px;
+  }
+
+  .flow-steps-four :deep(.el-step__title) {
+    font-size: 12px;
   }
 }
 </style>

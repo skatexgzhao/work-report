@@ -11,6 +11,7 @@
 | 数据库与日志 | `backend/teamplan.db*`、`backend/test/*.db`、`*.sqlite*`、`*.log` |
 | 证书与凭据 | `*.pem`、`*.key`、`credentials.json` |
 | 本地 / 内部工作流 | `.cursor/`、`.comet/`、`openspec/`、`COMET.md`、`docs/superpowers/` |
+| 本地 Git 元数据 | `.git/`（勿打进 zip；`git push` 也不会上传此目录） |
 | 本地隔离 | `.dev/`、`.worktrees/` |
 
 **可以上传**：`backend/.env.example`、`deploy/config.env.example`（仅占位符）。
@@ -29,6 +30,14 @@ powershell -NoProfile -File scripts/publish-security-check.ps1
 
 - 根目录 [LICENSE](../LICENSE) 为 **MIT**，版权 **skatexg**。
 - 若包含上游 MIT 代码，保留 [NOTICE.md](../NOTICE.md)。
+
+## 不要和 `.git` 混淆
+
+- **`.git/`**：本机 Git 数据库，**不会**作为文件夹出现在 GitHub 网页的文件列表里；正常 `git push` 只传 commit 内容。
+- **`.github/`**：应公开的 CI 配置目录（Actions、Dependabot），**需要**保留。
+- **`.gitignore`**：忽略规则文件，**需要**保留。
+
+若用手动 zip 上传，解压前请删除导出包里的 `.git/`，不要整目录压缩内网 monorepo 根目录。
 
 ## 推送到 GitHub（仅 GitHub 认证）
 

@@ -25,12 +25,13 @@ export const useAuthStore = defineStore('auth', {
   },
 
   actions: {
-    async register({ username, password, departmentId }) {
+    async register({ username, password, departmentId, teamId }) {
       try {
         await axios.post(`${API_URL}/v1/auth/register`, {
           username,
           password,
-          departmentId
+          departmentId,
+          teamId: teamId ?? undefined
         })
       } catch (error) {
         const body = error.response?.data

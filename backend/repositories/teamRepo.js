@@ -67,11 +67,27 @@ async function setMembers(db, teamId, userIds) {
   return listMembers(db, teamId)
 }
 
+async function addMember(db, teamId, userId) {
+  await run(db, 'INSERT OR IGNORE INTO user_teams (user_id, team_id) VALUES (?, ?)', [userId, teamId])
+}
+
+async function listPublicByDepartment(db, departmentId) {
+  return all(
+    db,
+    `SELECT id, name FROM teams
+     WHERE department_id = ? AND status = 'ACTIVE'
+     ORDER BY name`,
+    [departmentId]
+  )
+}
+
 module.exports = {
   findById,
   listByDepartment,
   insertTeam,
   updateTeam,
   listMembers,
-  setMembers
+  setMembers,
+  addMember,
+  listPublicByDepartment
 }

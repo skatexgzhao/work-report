@@ -63,7 +63,7 @@
     <ul class="map-text-fallback">
       <li><strong>日报</strong>：每天简短记录，提交后成为周期报告的素材。</li>
       <li><strong>个人周/月/季报</strong>：选素材、手写或用 AI 起稿，保存后提交。</li>
-      <li><strong>小组 / 部门报告</strong>：部门负责人在列表里新建，查看提交情况后编辑汇总。</li>
+      <li><strong>小组 / 部门报告</strong>：负责人先创建小组；成员注册时自选小组，再在列表里新建本周期报告并汇总提交。</li>
     </ul>
   </div>
 </template>
